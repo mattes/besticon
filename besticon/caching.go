@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"context"
 
 	"github.com/golang/groupcache"
 )
@@ -25,7 +26,7 @@ func resultFromCache(siteURL string) ([]Icon, error) {
 	now := time.Now()
 	key := fmt.Sprintf("%d-%02d-%02d-%s", now.Year(), now.Month(), now.Day(), siteURL)
 	var data []byte
-	err := iconCache.Get(siteURL, key, groupcache.AllocatingByteSliceSink(&data))
+	err := iconCache.Get(context.Background(), key, groupcache.AllocatingByteSliceSink(&data))
 	if err != nil {
 		logger.Println("ERR:", err)
 		return fetchIcons(siteURL)
